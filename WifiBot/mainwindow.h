@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QKeyEvent>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -28,6 +29,7 @@ private:
     QPushButton *buttonLeft;
     QPushButton *buttonRight;
     QPushButton *buttonStop;
+    QPushButton *buttonRead;
     MyRobot robot;
 
 private slots:
@@ -41,6 +43,7 @@ private slots:
     void stop();
     void updateCrc();
     void test();
+    void read();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

@@ -58,13 +58,13 @@ void MyRobot::readyRead() {
     qDebug() << "reading..."; // read the data from the socket
     DataReceived = socket->readAll();
     emit updateUI(DataReceived);
-    qDebug() << DataReceived[0] << DataReceived[1] << DataReceived[2];
-}
+   }
 
 void MyRobot::MyTimerSlot() {
     qDebug() << "Timer...";
     while(Mutex.tryLock());
-    socket->write(DataToSend);
+        DataReceived=socket->readAll();
+        socket->write(DataToSend);
     Mutex.unlock();
 }
 

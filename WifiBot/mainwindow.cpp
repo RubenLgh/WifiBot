@@ -9,32 +9,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     buttonConnect = new QPushButton("Connect", this);
     buttonConnect->setGeometry(QRect(QPoint(100, 100), QSize(200, 50)));
-
     buttonDisConnect = new QPushButton("Disconnect", this);
     buttonDisConnect->setGeometry(QRect(QPoint(100, 300), QSize(200, 50)));
 
-
     buttonUp = new QPushButton("^", this);
     buttonUp->setGeometry(QRect(QPoint(500, 100), QSize(50, 50)));
-
     buttonDown = new QPushButton("v", this);
     buttonDown->setGeometry(QRect(QPoint(500, 300), QSize(50, 50)));
-
     buttonLeft = new QPushButton(">", this);
     buttonLeft->setGeometry(QRect(QPoint(600, 200), QSize(50, 50)));
-
     buttonRight = new QPushButton("<", this);
     buttonRight->setGeometry(QRect(QPoint(400, 200), QSize(50, 50)));
-
     buttonStop = new QPushButton("Stop", this);
     buttonStop->setGeometry(QRect(QPoint(500, 200), QSize(50, 50)));
 
+    connect(&robot,&MyRobot::updateUI,this,&MainWindow::read);
     connect(buttonConnect, &QPushButton::released, this, &MainWindow::connexion);
     connect(buttonDisConnect, &QPushButton::released, this, &MainWindow::deconnexion);
-
     connect(buttonUp, &QPushButton::released, this, &MainWindow::forward);
     connect(buttonDown, &QPushButton::released, this, &MainWindow::backward);
-
     connect(buttonLeft, &QPushButton::released, this, &MainWindow::left);
     connect(buttonRight, &QPushButton::released, this, &MainWindow::right);
     connect(buttonStop, &QPushButton::released, this, &MainWindow::stop);
@@ -48,6 +41,10 @@ MainWindow::~MainWindow()
 void MainWindow::connexion()
 {
    robot.doConnect();
+}
+
+void MainWindow::read(){
+qDebug() << robot.DataReceived;
 }
 
 void MainWindow::deconnexion()
@@ -68,8 +65,8 @@ void MainWindow::forward()
 void MainWindow::accelerate()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] += 10;
-    robot.DataToSend[4] += 10;
+    robot.DataToSend[2] = robot.DataToSend[2] + 10;
+    robot.DataToSend[4] = robot.DataToSend[4] + 10;
     robot.DataToSend[6] = 0x50;
 
     updateCrc();

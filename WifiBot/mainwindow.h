@@ -34,8 +34,15 @@ private:
     QSpinBox *speed;
     QLabel *textConnected;
     QLabel *batterie;
+    QLabel *depgauche;
+    QLabel *depdroite;
+    QLabel *dep;
     MyRobot robot;
     int keys[4];
+     long odoG = 0;
+     long odoD = 0;
+     long odol=0;
+     long odor=0;
 
 private slots:
     void connexion();

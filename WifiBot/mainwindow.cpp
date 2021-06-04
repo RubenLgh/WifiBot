@@ -43,8 +43,16 @@ MainWindow::MainWindow(QWidget *parent)
     speed = new QSpinBox(this);
     speed->setGeometry(QRect(QPoint(10, 500), QSize(50, 30)));
     speed->setMaximum(240);
+    speed->setValue(160);
 
     QFont f("Arial", 15, QFont::Bold);
+    depgauche = new QLabel("debug",this);
+    depgauche->setGeometry(340,40,50,50);
+    depdroite = new QLabel("debug",this);
+    depdroite->setGeometry(400,40,50,50);
+    dep = new QLabel(depgauche->text()+depdroite->text(),this);
+    dep->setGeometry(360,60,100,50);
+
 
     textConnected = new QLabel("Non Connecté",this);
     textConnected->setGeometry(330,10,500,50);
@@ -80,12 +88,28 @@ void MainWindow::read(){
     unsigned char irAvG = robot.DataReceived[3];
     unsigned char irArrG = robot.DataReceived[4];
     unsigned char irAvD = robot.DataReceived[11];
-    unsigned char irArrD = robot.DataReceived[10];
+    //le capteur affiche toujours 255
+    //unsigned char irArrD = robot.DataReceived[12];
+     qDebug() << QString::number(irAvG) << QString::number(irAvD) <<QString::number(irArrG); //<< QString::number(irArrD);
+
+
+
 
     //odometrie
-    long odoG = ((long)robot.DataReceived[8]<<24) + ((long)robot.DataReceived[7]<<16 )+ ((long)robot.DataReceived[6]<<8 )+ (long)robot.DataReceived[5];
-    long odoD = ((long)robot.DataReceived[16]<<24) + ((long)robot.DataReceived[15]<<16 )+ ((long)robot.DataReceived[14]<<8 )+ (long)robot.DataReceived[13];
-qDebug() << "odo gauche:"<<odoG <<" odoDroite"<< odoD;
+    //les vals initiales envoyées par le robot
+    if(odol==0){
+        odol = ((((long)robot.DataReceived[8]<<24)) + (((long)robot.DataReceived[7]<<16 ))+ (((long)robot.DataReceived[6]<<8 ))+ ((long)robot.DataReceived[5]));
+        odor = ((((long)robot.DataReceived[16]<<24)) + (((long)robot.DataReceived[15]<<16 ))+ (((long)robot.DataReceived[14]<<8 ))+ ((long)robot.DataReceived[13]));
+    }
+
+    odoG= ((((long)robot.DataReceived[8]<<24)) + (((long)robot.DataReceived[7]<<16 ))+ (((long)robot.DataReceived[6]<<8 ))+ ((long)robot.DataReceived[5])) -odol;
+    odoD= ((((long)robot.DataReceived[16]<<24)) + (((long)robot.DataReceived[15]<<16 ))+ (((long)robot.DataReceived[14]<<8 ))+ ((long)robot.DataReceived[13])) -odor;
+
+    depgauche->setText(QString::number((long)odoG));
+    depdroite->setText( QString::number((long)odoD));
+    //moyenne du deplacement des deux roues
+    dep->setText(QString::number((long)(odoG+odoD)));
+
 }
 
 void MainWindow::deconnexion()

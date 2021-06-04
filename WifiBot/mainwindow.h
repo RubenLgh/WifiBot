@@ -4,8 +4,9 @@
 #include "myrobot.h"
 #include <QMainWindow>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QKeyEvent>
-
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +20,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private:
     Ui::MainWindow *ui;
     QPushButton *buttonConnect;
@@ -29,8 +31,11 @@ private:
     QPushButton *buttonLeft;
     QPushButton *buttonRight;
     QPushButton *buttonStop;
-    QPushButton *buttonRead;
+    QSpinBox *speed;
+    QLabel *textConnected;
+    QLabel *batterie;
     MyRobot robot;
+    int keys[4];
 
 private slots:
     void connexion();
@@ -38,15 +43,20 @@ private slots:
     void forward();
     void accelerate();
     void left();
+    void leftUp();
+    void leftDown();
     void right();
+    void rightUp();
+    void rightDown();
     void backward();
     void stop();
     void updateCrc();
-    void test();
     void read();
+    void test();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 };
 short Crc16(QByteArray byteArray , int pos);
 #endif // MAINWINDOW_H

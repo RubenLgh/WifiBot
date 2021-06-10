@@ -7,6 +7,8 @@
 #include <QSpinBox>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QUrl>
+#include <QWebEngineView>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,6 +36,7 @@ private:
     QSpinBox *speed;
     QLabel *textConnected;
     QLabel *batterie;
+    QWebEngineView *camera;
     MyRobot robot;
     int keys[4];
 

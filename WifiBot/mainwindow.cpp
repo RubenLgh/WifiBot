@@ -54,6 +54,11 @@ MainWindow::MainWindow(QWidget *parent)
     keys[1] = 0;
     keys[2] = 0;
     keys[3] = 0;
+
+    camera = new QWebEngineView(this);
+    camera->load(QUrl("http://192.168.1.11:8080/?action=stream"));
+    camera->setGeometry(300,200,320,240);
+    camera->show();
 }
 
 MainWindow::~MainWindow()
@@ -113,8 +118,8 @@ void MainWindow::forward()
 void MainWindow::accelerate()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] += 10;
-    robot.DataToSend[4] += 10;
+   // robot.DataToSend[2] += 10;
+    //robot.DataToSend[4] += 10;
     robot.DataToSend[6] = 0x50;
 
     updateCrc();
@@ -172,8 +177,8 @@ void MainWindow::left()
 void MainWindow::leftUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value();
-    robot.DataToSend[4] = speed->value()/2;
+    robot.DataToSend[2] = speed->value()/2;
+    robot.DataToSend[4] = speed->value();
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -187,8 +192,8 @@ void MainWindow::leftUp()
 void MainWindow::leftDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value();
-    robot.DataToSend[4] = speed->value()/2;
+    robot.DataToSend[2] = speed->value()/2;
+    robot.DataToSend[4] = speed->value();
     robot.DataToSend[6] = 0x00;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -216,8 +221,8 @@ void MainWindow::right()
 void MainWindow::rightUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()/2;
-    robot.DataToSend[4] = speed->value();
+    robot.DataToSend[2] = speed->value();
+    robot.DataToSend[4] = speed->value()/2;
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("");
@@ -231,8 +236,8 @@ void MainWindow::rightUp()
 void MainWindow::rightDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()/2;
-    robot.DataToSend[4] = speed->value();
+    robot.DataToSend[2] = speed->value();
+    robot.DataToSend[4] = speed->value()/2;
     robot.DataToSend[6] = 0x00;
 
     buttonLeft->setStyleSheet("");

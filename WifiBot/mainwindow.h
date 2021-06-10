@@ -37,8 +37,18 @@ private:
     QLabel *depgauche;
     QLabel *depdroite;
     QLabel *dep;
+    QLabel *avg;
+    QLabel *arg;
+    QLabel *avd;
+    QLabel *ard;
     MyRobot robot;
     int keys[4];
+
+    unsigned char iravg=0;
+    unsigned char iravd=0;
+    unsigned char irarg=0;
+    unsigned char irard=0;
+
      long odoG = 0;
      long odoD = 0;
      long odol=0;

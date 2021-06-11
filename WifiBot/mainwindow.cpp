@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     buttonDisConnect->setGeometry(QRect(QPoint(10, 80), QSize(200, 50)));
 
 
+
+
     buttonUp = new QPushButton("^", this);
     buttonUp->setGeometry(QRect(QPoint(110, 200), QSize(50, 50)));
 
@@ -25,6 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     buttonLeft = new QPushButton("<", this);
     buttonLeft->setGeometry(QRect(QPoint(10, 300), QSize(50, 50)));
+
+    camUp = new QPushButton("^", this);
+    camUp->setGeometry(QRect(QPoint(630, 250), QSize(50, 50)));
+
+    camDown = new QPushButton("v", this);
+    camDown->setGeometry(QRect(QPoint(630, 350), QSize(50, 50)));
+
+    camLeft = new QPushButton("<", this);
+    camLeft->setGeometry(QRect(QPoint(580, 300), QSize(50, 50)));
+
+    camRight = new QPushButton(">", this);
+    camRight->setGeometry(QRect(QPoint(680, 300), QSize(50, 50)));
 
     buttonStop = new QPushButton("Stop", this);
     buttonStop->setGeometry(QRect(QPoint(110, 300), QSize(50, 50)));
@@ -39,6 +53,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonLeft, &QPushButton::released, this, &MainWindow::left);
     connect(buttonRight, &QPushButton::released, this, &MainWindow::right);
     connect(buttonStop, &QPushButton::released, this, &MainWindow::stop);
+    connect(camUp, &QPushButton::released, this, &MainWindow::moveCamUp);
+    connect(camDown, &QPushButton::released, this, &MainWindow::moveCamDown);
+    connect(camLeft, &QPushButton::released, this, &MainWindow::moveCamLeft);
+    connect(camRight, &QPushButton::released, this, &MainWindow::moveCamRight);
 
     speed = new QSpinBox(this);
     speed->setGeometry(QRect(QPoint(10, 500), QSize(50, 30)));
@@ -80,6 +98,14 @@ MainWindow::MainWindow(QWidget *parent)
     keys[1] = 0;
     keys[2] = 0;
     keys[3] = 0;
+
+    camera = new QWebEngineView(this);
+    camera->load(QUrl("http://192.168.1.11:8080/?action=stream"));
+    camera->setGeometry(260,200,320,240);
+    camera->show();
+
+    manager = new QNetworkAccessManager(this);
+
 }
 
 MainWindow::~MainWindow()
@@ -167,8 +193,8 @@ void MainWindow::forward()
 void MainWindow::accelerate()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] += 10;
-    robot.DataToSend[4] += 10;
+   // robot.DataToSend[2] += 10;
+    //robot.DataToSend[4] += 10;
     robot.DataToSend[6] = 0x50;
 
     updateCrc();
@@ -187,6 +213,26 @@ void MainWindow::backward()
     buttonUp->setStyleSheet("");
 
     updateCrc();
+}
+
+void MainWindow::moveCamUp()
+{
+    manager->get(QNetworkRequest(QUrl("http://192.168.1.11:8080/?action=command&dest=0&plugin=0&id=10094853&group=1&value=-200")));
+}
+
+void MainWindow::moveCamDown()
+{
+    manager->get(QNetworkRequest(QUrl("http://192.168.1.11:8080/?action=command&dest=0&plugin=0&id=10094853&group=1&value=200")));
+}
+
+void MainWindow::moveCamLeft()
+{
+    manager->get(QNetworkRequest(QUrl("http://192.168.1.11:8080/?action=command&dest=0&plugin=0&id=10094852&group=1&value=200")));
+}
+
+void MainWindow::moveCamRight()
+{
+    manager->get(QNetworkRequest(QUrl("http://192.168.1.11:8080/?action=command&dest=0&plugin=0&id=10094852&group=1&value=-200")));
 }
 
 void MainWindow::stop()
@@ -297,7 +343,7 @@ void MainWindow::rightDown()
 }
 void MainWindow::test()
 {
-    qDebug() << robot.DataToSend;
+
 }
 
 void MainWindow::updateCrc()

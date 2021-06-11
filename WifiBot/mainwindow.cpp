@@ -161,8 +161,8 @@ void MainWindow::deconnexion()
 void MainWindow::forward()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value();
-    robot.DataToSend[4] = speed->value();
+    robot.DataToSend[2] = speed->value()-((iravg+iravd)/4);
+    robot.DataToSend[4] = speed->value()-((iravg+iravd)/4);
     robot.DataToSend[6] = 0x50;
 
     buttonUp->setStyleSheet("background-color : rgb(255,255,0);");
@@ -233,8 +233,8 @@ void MainWindow::left()
 void MainWindow::leftUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()-(iravg/2);
-    robot.DataToSend[4] = (speed->value()-(iravg/2))/2;
+    robot.DataToSend[2] = (speed->value()-(iravg/2))/2;
+    robot.DataToSend[4] = (speed->value()-(iravg/2));
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -248,8 +248,8 @@ void MainWindow::leftUp()
 void MainWindow::leftDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()-(irarg/2);
-    robot.DataToSend[4] = (speed->value()-(irarg/2))/2;
+    robot.DataToSend[2] = (speed->value()-(irarg/2))/2;
+    robot.DataToSend[4] = (speed->value()-(irarg/2));
     robot.DataToSend[6] = 0x00;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -277,8 +277,8 @@ void MainWindow::right()
 void MainWindow::rightUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = (speed->value()-(iravd/2))/2;
-    robot.DataToSend[4] = speed->value()-(iravd/2);
+    robot.DataToSend[2] = speed->value()-(iravd/2);
+    robot.DataToSend[4] = (speed->value()-(iravd/2))/2;
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("");
@@ -292,8 +292,8 @@ void MainWindow::rightUp()
 void MainWindow::rightDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = (speed->value()-(irard/2))/2;
-    robot.DataToSend[4] = speed->value()-(irard/2);
+    robot.DataToSend[2] = speed->value()-(irard/2);
+    robot.DataToSend[4] = (speed->value()-(irard/2))/2;
 
     buttonLeft->setStyleSheet("");
     buttonUp->setStyleSheet("");

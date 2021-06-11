@@ -58,7 +58,7 @@ bool MyRobot::isConnected(){
 }
 
 void MyRobot::bytesWritten(qint64 bytes) {
-    qDebug() << bytes << " bytes written...";
+    //qDebug() << bytes << " bytes written...";
 }
 
 void MyRobot::readyRead() {
@@ -69,7 +69,7 @@ void MyRobot::readyRead() {
 }
 
 void MyRobot::MyTimerSlot() {
-    qDebug() << "Timer...";
+   // qDebug() << "Timer...";
     while(Mutex.tryLock());
     socket->write(DataToSend);
     Mutex.unlock();

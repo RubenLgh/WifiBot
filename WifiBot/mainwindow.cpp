@@ -61,8 +61,34 @@ MainWindow::MainWindow(QWidget *parent)
     speed = new QSpinBox(this);
     speed->setGeometry(QRect(QPoint(10, 500), QSize(50, 30)));
     speed->setMaximum(240);
+    speed->setValue(160);
 
     QFont f("Arial", 15, QFont::Bold);
+    depgauche = new QLabel("",this);
+    depgauche->setGeometry(340,40,50,50);
+    depdroite = new QLabel("",this);
+    depdroite->setGeometry(400,40,50,50);
+    dep = new QLabel(depgauche->text()+depdroite->text(),this);
+    dep->setGeometry(360,60,100,50);
+
+
+    QFont ir("Arial", 8, QFont::Bold);
+    avg = new QLabel("avg",this);
+    avg->setGeometry(600,80,20,20);
+    avg->setFont(ir);
+
+    avd = new QLabel("avd",this);
+    avd->setGeometry(720,80,20,20);
+    avd->setFont(ir);
+
+    arg = new QLabel("arg",this);
+    arg->setGeometry(600,160,20,20);
+    arg->setFont(ir);
+
+    ard = new QLabel("ard",this);
+    ard->setGeometry(720,160,20,20);
+    ard->setFont(ir);
+
 
     textConnected = new QLabel("Non Connecté",this);
     textConnected->setGeometry(330,10,500,50);
@@ -97,21 +123,49 @@ void MainWindow::read(){
 //qDebug() << robot.DataReceived;
     //Affichage de la batterie
     unsigned char batteryLvl = robot.DataReceived[2];
-    if(batteryLvl>150)//le robot est chargé
+    if(batteryLvl>150)//le robot est branché
         this->ui->batterie->setText("Charging...");
     else{//la val de la batterie va de 101 a 125
         this->ui->batterie->setText(QString::number(qRound((batteryLvl-102)/1.25))+" %");
     }
+
+
     //Gestion des infrarouges
-    unsigned char irAvG = robot.DataReceived[3];
-    unsigned char irArrG = robot.DataReceived[4];
-    unsigned char irAvD = robot.DataReceived[11];
-    unsigned char irArrD = robot.DataReceived[10];
+
+    iravg = robot.DataReceived[3];
+
+    //le capteur est cassé, il affiche toujours 255
+    irarg= robot.DataReceived[12];
+
+    iravd= robot.DataReceived[11];
+    irard = robot.DataReceived[4];
+
+    avg->setText(QString::number(iravg));
+    avd->setText(QString::number(iravd));
+    arg->setText(QString::number(irarg));
+    ard->setText(QString::number(irard));
+    ard->setStyleSheet( "color : rgb("+QString::number(irard)+",0,0);");
+    avd->setStyleSheet( "color : rgb("+QString::number(iravd)+",0,0);");
+    arg->setStyleSheet( "color : rgb("+QString::number(irarg)+",0,0);");
+    avg->setStyleSheet( "color : rgb("+QString::number(iravg)+",0,0);");
+
+
 
     //odometrie
-    long odoG = ((long)robot.DataReceived[8]<<24) + ((long)robot.DataReceived[7]<<16 )+ ((long)robot.DataReceived[6]<<8 )+ (long)robot.DataReceived[5];
-    long odoD = ((long)robot.DataReceived[16]<<24) + ((long)robot.DataReceived[15]<<16 )+ ((long)robot.DataReceived[14]<<8 )+ (long)robot.DataReceived[13];
-qDebug() << "odo gauche:"<<odoG <<" odoDroite"<< odoD;
+    //les vals initiales envoyées par le robot
+    if(odol==0){
+        odol = (((( long)robot.DataReceived[8]<<24)) + (((long)robot.DataReceived[7]<<16 ))+ (((long)robot.DataReceived[6]<<8 ))+ ((long)robot.DataReceived[5]));
+        odor = (((( long)robot.DataReceived[16]<<24)) + (((long)robot.DataReceived[15]<<16 ))+ (((long)robot.DataReceived[14]<<8 ))+ ((long)robot.DataReceived[13]));
+    }
+
+    odoG= ((((long)robot.DataReceived[8]<<24)) + (((long)robot.DataReceived[7]<<16 ))+ (((long)robot.DataReceived[6]<<8 ))+ ((long)robot.DataReceived[5])) -odol;
+    odoD= ((((long)robot.DataReceived[16]<<24)) + (((long)robot.DataReceived[15]<<16 ))+ (((long)robot.DataReceived[14]<<8 ))+ ((long)robot.DataReceived[13])) -odor;
+
+    depgauche->setText(QString::number(odoG));
+    depdroite->setText( QString::number(odoD));
+    //moyenne du deplacement des deux roues
+    dep->setText(QString::number((odoG+odoD)));
+
 }
 
 void MainWindow::deconnexion()
@@ -218,8 +272,8 @@ void MainWindow::left()
 void MainWindow::leftUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()/2;
-    robot.DataToSend[4] = speed->value();
+    robot.DataToSend[2] = speed->value()-(iravg/2);
+    robot.DataToSend[4] = (speed->value()-(iravg/2))/2;
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -233,8 +287,8 @@ void MainWindow::leftUp()
 void MainWindow::leftDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value()/2;
-    robot.DataToSend[4] = speed->value();
+    robot.DataToSend[2] = speed->value()-(irarg/2);
+    robot.DataToSend[4] = (speed->value()-(irarg/2))/2;
     robot.DataToSend[6] = 0x00;
 
     buttonLeft->setStyleSheet("background-color : rgb(255,255,0);");
@@ -262,8 +316,8 @@ void MainWindow::right()
 void MainWindow::rightUp()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value();
-    robot.DataToSend[4] = speed->value()/2;
+    robot.DataToSend[2] = (speed->value()-(iravd/2))/2;
+    robot.DataToSend[4] = speed->value()-(iravd/2);
     robot.DataToSend[6] = 0x50;
 
     buttonLeft->setStyleSheet("");
@@ -277,9 +331,8 @@ void MainWindow::rightUp()
 void MainWindow::rightDown()
 {
     robot.DataToSend.resize(9);
-    robot.DataToSend[2] = speed->value();
-    robot.DataToSend[4] = speed->value()/2;
-    robot.DataToSend[6] = 0x00;
+    robot.DataToSend[2] = (speed->value()-(irard/2))/2;
+    robot.DataToSend[4] = speed->value()-(irard/2);
 
     buttonLeft->setStyleSheet("");
     buttonUp->setStyleSheet("");

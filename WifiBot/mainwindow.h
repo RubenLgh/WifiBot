@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QUrl>
 #include <QWebEngineView>
+#include <QNetworkAccessManager>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,10 +34,16 @@ private:
     QPushButton *buttonLeft;
     QPushButton *buttonRight;
     QPushButton *buttonStop;
+    QPushButton *camUp;
+    QPushButton *camDown;
+    QPushButton *camLeft;
+    QPushButton *camRight;
     QSpinBox *speed;
     QLabel *textConnected;
     QLabel *batterie;
     QWebEngineView *camera;
+    QWebEngineView *controlCamera;
+    QNetworkAccessManager *manager;
     MyRobot robot;
     int keys[4];
 
@@ -52,6 +59,10 @@ private slots:
     void rightUp();
     void rightDown();
     void backward();
+    void moveCamUp();
+    void moveCamDown();
+    void moveCamLeft();
+    void moveCamRight();
     void stop();
     void updateCrc();
     void read();

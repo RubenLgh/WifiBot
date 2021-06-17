@@ -13,7 +13,7 @@ MyRobot::MyRobot(QObject *parent) : QObject(parent) {
     DataToSend[6] = 0x00;
     DataToSend[7] = 0x0;
     DataToSend[8] = 0x0;
-    //DataReceived.resize(21);
+    DataReceived.resize(21);
     TimerEnvoi = new QTimer();
     // setup signal and slot
     connect(TimerEnvoi, SIGNAL(timeout()), this, SLOT(MyTimerSlot())); //Send data to wifibot timer
@@ -58,7 +58,7 @@ bool MyRobot::isConnected(){
 }
 
 void MyRobot::bytesWritten(qint64 bytes) {
-    //qDebug() << bytes << " bytes written...";
+    qDebug() << bytes << " bytes written...";
 }
 
 void MyRobot::readyRead() {
@@ -69,7 +69,7 @@ void MyRobot::readyRead() {
 }
 
 void MyRobot::MyTimerSlot() {
-   // qDebug() << "Timer...";
+    qDebug() << "Timer...";
     while(Mutex.tryLock());
     socket->write(DataToSend);
     Mutex.unlock();

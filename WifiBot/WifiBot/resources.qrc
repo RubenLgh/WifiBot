@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>wifibot.png</file>
+        <file>grass.png</file>
+    </qresource>
+</RCC>

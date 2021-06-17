@@ -26,21 +26,23 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QPushButton *buttonConnect;
-    QPushButton *buttonDisConnect;
+    double calculVitesse(long odo,bool estGauche);
+    QPushButton *buttonConnect; //Bouton pour se conencter
+    QPushButton *buttonDisConnect; //Bouton pour se déconnecter
     QPushButton *buttonTest;
-    QPushButton *buttonUp;
-    QPushButton *buttonDown;
-    QPushButton *buttonLeft;
-    QPushButton *buttonRight;
-    QPushButton *buttonStop;
-    QPushButton *camUp;
-    QPushButton *camDown;
-    QPushButton *camLeft;
-    QPushButton *camRight;
-    QSpinBox *speed;
-    QLabel *textConnected;
-    QLabel *batterie;
+    QPushButton *buttonUp;  //Déplacement vers le haut
+    QPushButton *buttonDown; //Déplacement vers le bas
+    QPushButton *buttonLeft; //Déplacement vers la gauche
+    QPushButton *buttonRight; //Déplacement vers la droite
+    QPushButton *buttonStop;  //Bouton pour arréter le robot
+    QPushButton *camUp; //Déplacer la caméra vers le haut
+    QPushButton *camDown; //Déplacer la caméra vers le bas
+    QPushButton *camLeft ;//Déplacer la caméra vers la gauche
+    QPushButton *camRight; //Déplacer la caméra vers la droite
+    QSpinBox *speed;    //Pour mettre une vitesse au robot
+    QLabel *textConnected; //Affichage à l'écran de l'état de la connexion
+    QLabel *batterie;   //Affichage de la batterie
+    QLabel *vitesse;
     QLabel *depgauche;
     QLabel *depdroite;
     QLabel *dep;
@@ -48,45 +50,47 @@ private:
     QLabel *arg;
     QLabel *avd;
     QLabel *ard;
-    QWebEngineView *camera;
-    QWebEngineView *controlCamera;
-    QNetworkAccessManager *manager;
-    MyRobot robot;
-    int keys[4];
+    QWebEngineView *camera; //Affichage de la caméra
+    QNetworkAccessManager *manager;//permet d'envoyer les requêtes pour bouger la caméra
+    MyRobot robot; // permet de gérer le robot
+    int keys[4]; //Pour lire plusieurs touches
+
 
     unsigned char iravg=0;
-    unsigned char iravd=0;
-    unsigned char irarg=0;
-    unsigned char irard=0;
+        unsigned char iravd=0;
+        unsigned char irarg=0;
+        unsigned char irard=0;
 
-     long odoG = 0;
-     long odoD = 0;
-     long odol=0;
-     long odor=0;
-
+        //Stockage valeurs odométrie
+             long odoG = 0;
+             long odoD = 0;
+             long initOdoG = 0;
+             long initOdoD = 0;
+             long curOdoG=0;
+             long curOdoD=0;
 private slots:
-    void connexion();
-    void deconnexion();
-    void forward();
-    void accelerate();
-    void left();
-    void leftUp();
-    void leftDown();
-    void right();
-    void rightUp();
-    void rightDown();
-    void backward();
-    void moveCamUp();
-    void moveCamDown();
-    void moveCamLeft();
-    void moveCamRight();
-    void stop();
-    void updateCrc();
+    void connexion(); //Lance la connexion au robot
+    void deconnexion(); //Se déconnecte du robot
+    void forward(); //Fait avancer
+    void accelerate(); //(Non utilisé pour le moment) Fait avancer de plus en plus vite
+    void left(); // tourne à gauche à l'arrêt
+    void leftUp(); // tourne à gauche en avançant
+    void leftDown(); //tourne à gauche en reculant
+    void right(); // tourne à droite à l'arrêt
+    void rightUp();//tourne à droite en avançant
+    void rightDown(); //tourne à droite en reculant
+    void backward();    //recule
+    void moveCamUp();//Déplace la caméra vers le haut
+    void moveCamDown(); //Déplace la caméra vers le bas
+    void moveCamLeft();//Déplace la caméra vers la gauche
+    void moveCamRight();//Déplace la caméra vers la droite
+    void stop(); //Arrête le robot
+    void updateCrc();//Met à jour le crc
     void read();
     void test();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event);   //Permet de lire les touches du clavier
     void keyReleaseEvent(QKeyEvent *event);
 };
 short Crc16(QByteArray byteArray , int pos);

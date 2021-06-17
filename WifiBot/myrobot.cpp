@@ -29,7 +29,7 @@ void MyRobot::doConnect() {
     connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
     qDebug() << "connecting..."; // this is not blocking call
     //socket->connectToHost("LOCALHOST", 15020);
-    socket->connectToHost("192.168.1.11", 15020); // connection to wifibot
+    socket->connectToHost("192.168.1.106", 15020); // connection to wifibot
     // we need to wait...
     if(!socket->waitForConnected(5000)) {
         qDebug() << "Error: " << socket->errorString();
@@ -58,7 +58,7 @@ bool MyRobot::isConnected(){
 }
 
 void MyRobot::bytesWritten(qint64 bytes) {
-    //qDebug() << bytes << " bytes written...";
+    qDebug() << bytes << " bytes written...";
 }
 
 void MyRobot::readyRead() {
@@ -69,7 +69,7 @@ void MyRobot::readyRead() {
 }
 
 void MyRobot::MyTimerSlot() {
-   // qDebug() << "Timer...";
+    qDebug() << "Timer...";
     while(Mutex.tryLock());
     socket->write(DataToSend);
     Mutex.unlock();
